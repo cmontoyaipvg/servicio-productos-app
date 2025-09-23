@@ -170,12 +170,12 @@ let productos = [
 ];
 
 // Obtener todos los productos
-app.get('/api/productos', (req, res) => {
+app.get('/productos', (req, res) => {
 	res.json(productos);
 });
 
 // Obtener un producto por ID
-app.get('/api/productos/:id', (req, res) => {
+app.get('/productos/:id', (req, res) => {
 	const id = parseInt(req.params.id);
 	const producto = productos.find(p => p.id === id);
 	if (producto) {
