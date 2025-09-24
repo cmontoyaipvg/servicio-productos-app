@@ -1,7 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+// Servir archivos estáticos de la carpeta public/img
+app.use('/img', express.static(path.join(__dirname, 'public', 'img')));
 
 app.use(express.json());
 
@@ -171,7 +176,12 @@ let productos = [
 
 // Obtener todos los productos
 app.get('/productos', (req, res) => {
-	res.json(productos);
+	// Agregar la URL completa de la imagen para cada producto
+	const productosConUrl = productos.map(p => ({
+		...p,
+		imagen: `${req.protocol}://${req.get('host')}/img/${p.imagen}`
+	}));
+	res.json(productosConUrl);
 });
 
 // Obtener un producto por ID
@@ -179,7 +189,12 @@ app.get('/productos/:id', (req, res) => {
 	const id = parseInt(req.params.id);
 	const producto = productos.find(p => p.id === id);
 	if (producto) {
-		res.json(producto);
+		// Agregar la URL completa de la imagen
+		const productoConUrl = {
+			...producto,
+			imagen: `${req.protocol}://${req.get('host')}/img/${producto.imagen}`
+		};
+		res.json(productoConUrl);
 	} else {
 		res.status(404).json({ mensaje: 'Producto no encontrado' });
 	}
